@@ -297,7 +297,74 @@ Font: 3                                   → Roman selected
 
 ---
 
-## Escape Code Reference
+## Embedding Escape Codes in Text Files
+
+The script menu applies settings to the **entire document**. If you want to change style mid-document — for example making a single word or paragraph bold while the rest is normal — you can embed escape codes directly inside your `.txt` file as raw bytes.
+
+The printer reads these codes as instructions as it encounters them while printing, so you can turn effects on and off anywhere in the text.
+
+### How to do it with Python
+
+The cleanest way to create files with embedded codes is a short Python script:
+
+```python
+ESC = '\x1b'
+
+BOLD_ON   = ESC + 'E'
+BOLD_OFF  = ESC + 'F'
+
+ITALIC_ON  = ESC + '4'
+ITALIC_OFF = ESC + '5'
+
+text = 'This is normal text. ' + BOLD_ON + 'This is bold.' + BOLD_OFF + ' Back to normal.\n'
+
+with open('myfile.txt', 'wb') as f:
+    f.write(text.encode('latin-1'))
+```
+
+Print the resulting file with the script as normal, selecting **no bold or italic from the menu** — the formatting is already controlled inside the file itself.
+
+### Common inline codes
+
+| Effect | On | Off |
+|--------|----|-----|
+| Bold | `ESC + 'E'` | `ESC + 'F'` |
+| Italic | `ESC + '4'` | `ESC + '5'` |
+| Underline | `ESC + '-' + '1'` | `ESC + '-' + '0'` |
+| Double-strike | `ESC + 'G'` | `ESC + 'H'` |
+| Outline | `ESC + 'q' + '\x01'` | `ESC + 'q' + '\x00'` |
+| Shadow | `ESC + 'q' + '\x02'` | `ESC + 'q' + '\x00'` |
+| Double width | `ESC + 'W' + '1'` | `ESC + 'W' + '0'` |
+| Superscript | `ESC + 'S' + '0'` | `ESC + 'T'` |
+| Subscript | `ESC + 'S' + '1'` | `ESC + 'T'` |
+
+### Combining effects
+
+Effects stack — you can combine them freely:
+
+```python
+ESC = '\x1b'
+
+text = (
+    'Normal text here.\n'
+    + ESC + 'E'           # bold on
+    + ESC + '4'           # italic on
+    + 'Bold and italic.\n'
+    + ESC + 'F'           # bold off
+    + ESC + '5'           # italic off
+    + 'Back to normal.\n'
+)
+
+with open('myfile.txt', 'wb') as f:
+    f.write(text.encode('latin-1'))
+```
+
+### Important notes
+
+- Always save the file in **binary mode** (`'wb'`) — this ensures the escape bytes are written exactly as-is without any encoding conversion
+- Use **`latin-1`** encoding, not UTF-8 — latin-1 maps byte values directly which is what the printer expects
+- If you open the file in a text editor you will see garbled characters where the escape codes are — this is normal
+- If you also select bold or italic from the script menu, it will apply to the whole document on top of your inline codes — for mixed formatting, leave those menu options off and control everything from within the file
 
 All codes use Epson LQ emulation. ESC = 0x1B.
 
