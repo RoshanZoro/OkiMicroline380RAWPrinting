@@ -86,7 +86,7 @@ usb:///USB%20Print?location=14100000
 
 The `_USB_Print` name on the left is the auto-detected name macOS assigned. You will replace this with your own queue name (`OKI380_RAW`) in the next step.
 
-The `location=` value at the end of the URI corresponds to the physical USB port the printer is connected to. If you move it to a different port, this value may change and you will need to re-register the printer with the new URI.
+The `location=` value at the end of the URI corresponds to the physical USB port the printer is connected to. It is stable across reboots as long as the printer remains in the same port. If you move it to a different port or a different hub, the value will change and you will need to re-register the printer with the new URI. To avoid this, pick a dedicated USB port for the printer and always use that one.
 
 ---
 
@@ -523,5 +523,5 @@ sudo usermod -aG lpadmin $USER
 ```
 Then log out and back in.
 
-**USB URI changes after reboot**
-On some systems the `location=` value is stable, on others it changes. If this is a recurring issue, try using a `usb://OKI/` style URI or create a udev rule to assign a persistent symlink to the device.
+**USB URI changes after moving to a different port**
+The `location=` value is stable across reboots when the printer stays in the same physical USB port. It only changes if you move the printer to a different port or hub. If this happens, run `lpstat -v` to find the new URI and re-register with `lpadmin`. To avoid this happening, dedicate a specific port to the printer.
