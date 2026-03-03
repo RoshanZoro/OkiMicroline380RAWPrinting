@@ -38,7 +38,14 @@ A bash script for Linux that provides a full interactive menu for printing to th
 
 The ML380 must be registered with CUPS as a **raw queue** — meaning CUPS passes data directly to the printer without any filtering or driver processing. This is essential because the script sends its own escape codes, and any CUPS processing would corrupt or interfere with them.
 
-> **Important:** Do not use the `-m` flag (model/driver) when registering the printer. Using `-m raw` or `-m everywhere` does not work reliably for this purpose. The raw behaviour is achieved solely through the flags shown below.
+> **Important:** Do not use the `-m` flag on macOS. Both common options fail:
+>
+> - `-m raw` is explicitly blocked on macOS and will return:
+>   `lpadmin: Raw queues are no longer supported on macOS.`
+> - `-m everywhere` attempts to auto-detect the printer over the network and will return:
+>   `lpadmin: Unable to connect to ":0": Can't assign requested address`
+>
+> Omitting `-m` entirely is the correct approach on macOS. CUPS will create the queue without a filter chain, which is exactly what is needed for raw escape code printing.
 
 ### Find Your Printer's USB Path
 
