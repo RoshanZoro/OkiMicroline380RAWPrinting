@@ -49,13 +49,27 @@ The ML380 must be registered with CUPS as a **raw queue** — meaning CUPS passe
 
 ### Find Your Printer's USB Path
 
-First, plug in and power on the printer. Then run:
+Before the URI can be discovered, the printer must first be added through the macOS GUI. macOS does not expose the USB device URI until a printer entry exists in the system.
+
+**Step 1 — Add the printer via System Settings:**
+
+1. Make sure the printer is plugged in and powered on
+2. Open **System Settings → Printers & Scanners**
+3. Click the **Add Printer, Scanner or Fax...** button
+4. macOS will detect the OKI Microline 380 over USB and list it
+5. Select it and click **Add**
+
+This creates a default macOS printer entry. You do not need to use this entry for printing — its purpose here is simply to make the USB device visible to CUPS so the URI can be retrieved.
+
+**Step 2 — Retrieve the URI:**
+
+Once the printer has been added via the GUI, run:
 
 ```bash
 lpstat -v
 ```
 
-macOS automatically detects connected USB printers and lists them with their device URIs, even before you have registered a queue. Example output:
+You will see output similar to:
 
 ```
 device for _USB_Print: usb:///USB%20Print?location=14100000
