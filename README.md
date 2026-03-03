@@ -56,10 +56,13 @@ Before the URI can be discovered, the printer must first be added through the ma
 1. Make sure the printer is plugged in and powered on
 2. Open **System Settings → Printers & Scanners**
 3. Click the **Add Printer, Scanner or Fax...** button
-4. macOS will detect the OKI Microline 380 over USB and list it
-5. Select it and click **Add**
+4. A new window appears listing detected devices — select **USB Print** from the list
+5. You will see fields for Name, Location, and Use
+6. Next to **Use**, click **Select Software...**
+7. Search for OKI in the list. Select **Oki ML 380 Foomatic/epson** if available, otherwise **Oki 24-pin series** as a fallback
+8. Click **Add**
 
-This creates a default macOS printer entry. You do not need to use this entry for printing — its purpose here is simply to make the USB device visible to CUPS so the URI can be retrieved.
+> **Note:** The driver selected here does not affect how this script prints. Your raw queue (`OKI380_RAW`) bypasses the driver entirely — escape codes are sent directly to the printer. The driver only matters if you later print through the standard macOS print dialog using the GUI queue.
 
 **Step 2 — Retrieve the URI:**
 
