@@ -359,7 +359,86 @@ with open('myfile.txt', 'wb') as f:
     f.write(text.encode('latin-1'))
 ```
 
-### Important notes
+### Making a word bold in an existing file
+
+You can also take an existing `.txt` file and wrap a word or phrase in bold escape codes without rewriting the whole file. Read and write in binary mode throughout so nothing gets re-encoded:
+
+```python
+import re
+
+ESC = b'\x1b'
+BOLD_ON  = ESC + b'E'
+BOLD_OFF = ESC + b'F'
+
+input_file  = 'myfile.txt'
+output_file = 'myfile_bold.txt'
+
+# The word or phrase you want to make bold
+target = b'light of the world'
+
+with open(input_file, 'rb') as f:
+    content = f.read()
+
+replacement = BOLD_ON + target + BOLD_OFF
+content = content.replace(target, replacement)
+
+with open(output_file, 'wb') as f:
+    f.write(content)
+
+print('Done —', output_file)
+```
+
+For **case-insensitive** matching, use `re.sub` instead:
+
+```python
+import re
+
+ESC = b'\x1b'
+BOLD_ON  = ESC + b'E'
+BOLD_OFF = ESC + b'F'
+
+input_file  = 'myfile.txt'
+output_file = 'myfile_bold.txt'
+
+target = b'light of the world'
+
+with open(input_file, 'rb') as f:
+    content = f.read()
+
+replacement = BOLD_ON + target + BOLD_OFF
+content = re.sub(target, replacement, content, flags=re.IGNORECASE)
+
+with open(output_file, 'wb') as f:
+    f.write(content)
+
+print('Done —', output_file)
+```
+
+To bold **every occurrence** of multiple words in one pass:
+
+```python
+ESC = b'\x1b'
+BOLD_ON  = ESC + b'E'
+BOLD_OFF = ESC + b'F'
+
+input_file  = 'myfile.txt'
+output_file = 'myfile_bold.txt'
+
+targets = [b'light', b'salt', b'blessed']
+
+with open(input_file, 'rb') as f:
+    content = f.read()
+
+for target in targets:
+    content = content.replace(target, BOLD_ON + target + BOLD_OFF)
+
+with open(output_file, 'wb') as f:
+    f.write(content)
+
+print('Done —', output_file)
+```
+
+> **Note:** Always write to a new output file rather than overwriting the original. The original stays clean and you can re-run the script with different words without starting over.
 
 - Always save the file in **binary mode** (`'wb'`) — this ensures the escape bytes are written exactly as-is without any encoding conversion
 - Use **`latin-1`** encoding, not UTF-8 — latin-1 maps byte values directly which is what the printer expects
