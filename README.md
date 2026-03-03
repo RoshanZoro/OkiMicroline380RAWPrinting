@@ -55,25 +55,21 @@ First, plug in and power on the printer. Then run:
 lpstat -v
 ```
 
-This lists all printers CUPS currently knows about, along with their device URIs. Example output:
+macOS automatically detects connected USB printers and lists them with their device URIs, even before you have registered a queue. Example output:
 
 ```
-device for OKI380_RAW: usb:///USB%20Print?location=14100000
+device for _USB_Print: usb:///USB%20Print?location=14100000
 ```
 
-If the printer has not been registered yet, you can discover its raw USB URI using:
-
-```bash
-sudo lpinfo -v
-```
-
-Look for a line beginning with `direct usb://` that corresponds to your printer. Example:
+The part you need is the URI — everything from `usb://` onwards:
 
 ```
-direct usb:///USB%20Print?location=14100000
+usb:///USB%20Print?location=14100000
 ```
 
-The URI will vary depending on which USB port the printer is connected to. If you move it to a different port, the `location=` value may change and you will need to re-register it.
+The `_USB_Print` name on the left is the auto-detected name macOS assigned. You will replace this with your own queue name (`OKI380_RAW`) in the next step.
+
+The `location=` value at the end of the URI corresponds to the physical USB port the printer is connected to. If you move it to a different port, this value may change and you will need to re-register the printer with the new URI.
 
 ---
 
