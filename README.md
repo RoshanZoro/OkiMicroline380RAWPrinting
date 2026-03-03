@@ -62,7 +62,7 @@ Before the URI can be discovered, the printer must first be added through the ma
 7. Search for OKI in the list. Select **Oki ML 380 Foomatic/epson** if available, otherwise **Oki 24-pin series** as a fallback
 8. Click **Add**
 
-> **Note:** The driver selected here does not affect how this script prints. Your raw queue (`OKI380_RAW`) bypasses the driver entirely — escape codes are sent directly to the printer. The driver only matters if you later print through the standard macOS print dialog using the GUI queue.
+> **Note:** The driver selected here does not affect how this script prints — the raw queue (`OKI380_RAW`) bypasses it entirely and sends escape codes directly to the printer. However, selecting the correct driver means you can still print normally through the standard macOS print dialog using the GUI queue, with full access to print settings. The raw script is simply faster and gives you direct control over the printer's features.
 
 **Step 2 — Retrieve the URI:**
 
